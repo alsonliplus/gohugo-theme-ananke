@@ -36,3 +36,21 @@ other = "标签为“{{ .Title }}”的页面如下"
 
 [pageTitle]
 other = "{{ .Name }} 页"
+
+[about]
+other = "关于"
+
+[Articles]
+other = "文章"
+
+[articles]
+other = "文章"
+
+[contact]
+other = "联系"
+
+[home]
+other = "首页"
+
+[news]
+other = "新闻"

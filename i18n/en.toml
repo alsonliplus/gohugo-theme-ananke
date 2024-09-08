@@ -47,3 +47,18 @@ other = "{{ .Count }} words"
 
 [pageTitle]
 other = "{{ .Name }} page"
+
+[about]
+other = "About"
+
+[articles]
+other = "Articles"
+
+[contact]
+other = "Contact"
+
+[home]
+other = "Home"
+
+[news]
+other = "News"

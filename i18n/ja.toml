@@ -44,3 +44,21 @@ other = "{{ .Count }} 文字"
 
 [pageTitle]
 other = "{{ .Name }} ページ"
+
+[about]
+other = "介紹"
+
+[Articles]
+other = "記事"
+
+[articles]
+other = "記事"
+
+[contact]
+other = "連絡"
+
+[home]
+other = "トップ"
+
+[news]
+other = "情報"

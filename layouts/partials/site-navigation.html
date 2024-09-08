@@ -1,26 +1,112 @@
 <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l justify-between items-center center">
-    <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white no-underline white-90 dib">
-      {{ with .Site.Params.site_logo }}
-        <img src="{{ relURL . }}" class="w100 mw5-ns" alt="{{ $.Site.Title }}" />
-      {{ else }}
-        {{ .Site.Title }}
-      {{ end }}
-    </a>
     <div class="flex-l items-center">
-      {{ partial "i18nlist.html" . }}
-      {{ if .Site.Menus.main }}
-        <ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
-          {{ range .Site.Menus.main }}
-          <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }}">
-            <a class="hover-white no-underline white-90" href="{{ .URL }}" title="{{ i18n "pageTitle" . }}">
-              {{ .Name }}
-            </a>
-          </li>
+      <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white no-underline white-90 dib nowrap">
+        {{ with .Site.Params.site_logo }}
+          <img src="{{ relURL . }}" class="w100 mw5-ns" alt="{{ $.Site.Title }}" />
+        {{ else }}
+          {{ .Site.Title }}
+        {{ end }}
+      </a>
+    </div>
+    <div class="flex-l items-center">
+      <!-- 动态生成导航项 -->
+      <ul class="pl0 mr3 flex flex-wrap">
+        {{ $currentPage := . }}
+        {{ $contentDir := printf "content/%s" .Site.Language.Lang }}
+        {{ range (readDir $contentDir) }}
+          {{ if .IsDir }}
+            {{ $name := .Name }}
+            <li class="list f5 f4-ns fw4 dib pr3">
+              <a class="hover-white no-underline white-90" href="/{{ $.Site.Language.Lang }}/{{ $name }}/" title="{{ $name }}">
+                {{ with i18n $name }}{{ . }}{{ else }}{{ $name }}{{ end }}
+              </a>
+            </li>
           {{ end }}
+        {{ end }}
+      </ul>
+      <!-- 自定义语言切换按钮 -->
+      <div class="language-switcher">
+        <div class="selected-language" onclick="toggleLanguageMenu()">
+          {{ if eq .Site.Language.Lang "zh" }}中文
+          {{ else if eq .Site.Language.Lang "en" }}English
+          {{ else if eq .Site.Language.Lang "ja" }}日本語
+          {{ end }}
+        </div>
+        <ul class="language-menu">
+          <li><a href="{{ .Site.BaseURL }}zh/">中文</a></li>
+          <li><a href="{{ .Site.BaseURL }}en/">English</a></li>
+          <li><a href="{{ .Site.BaseURL }}ja/">日本語</a></li>
         </ul>
-      {{ end }}
-      {{ partialCached "social-follow.html" . }}
+      </div>
     </div>
   </div>
 </nav>
+
+<style>
+  .language-switcher {
+    position: relative;
+    display: inline-block;
+  }
+
+  .language-switcher::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>') no-repeat center;
+    background-size: contain;
+  }
+
+  .selected-language {
+    color: white;
+    font-size: 1rem;
+    padding-left: 20px;
+    cursor: pointer;
+  }
+
+  .language-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    z-index: 1000;
+  }
+
+  .language-menu li {
+    padding: 5px 10px;
+  }
+
+  .language-menu li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .language-menu li:hover {
+    background-color: #444;
+  }
+</style>
+
+<script>
+  function toggleLanguageMenu() {
+    var menu = document.querySelector('.language-menu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  }
+
+  // 点击页面其他地方时关闭菜单
+  document.addEventListener('click', function(event) {
+    var switcher = document.querySelector('.language-switcher');
+    var isClickInside = switcher.contains(event.target);
+
+    if (!isClickInside) {
+      document.querySelector('.language-menu').style.display = 'none';
+    }
+  });
+</script>
